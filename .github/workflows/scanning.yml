@@ -1,0 +1,25 @@
+
+name: trigger-pipeline
+on:
+  #push:
+    #branches: [ "development", "UAT", "release" ]
+  pull_request:
+    branches: [ "release" ]
+    types:
+      - opened
+      #- edited
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+jobs:
+   WF:
+     runs-on:  windows-latest ##
+     steps:
+        - name: Azure pipelines actions
+          uses: Azure/pipelines@v1.2
+          with: 
+           azure-devops-project-url: 'https://dev.azure.com/saiprakashkosuru0505/testproject'
+           azure-pipeline-name: 'App1'
+           azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN_DEV }}'
+           azure-pipeline-variables: '{"LAST_COMMIT_SHA_ID": "${{ github.event.pull_request.head.sha }}" , "Branch_Head_Ref": "${{ github.event.pull_request.head.ref }}" , "PR_Title": "${{ github.event.pull_request.title }}"}'
